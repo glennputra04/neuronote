@@ -1,0 +1,9 @@
+transformers==4.36.2
+fastapi
+uvicorn
+torch
+python-pptx
+python-multipart
+scikit-learn
+pillow
+pytesseract
