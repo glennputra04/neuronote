@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartVerse</title>
+    <title>NeuroNote</title>
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -26,7 +26,7 @@
         }
 
         .login-btn {
-            background: #7fb2ea;
+            background: #ABD0FF;
             color: white;
             border-radius: 8px;
             padding: 6px 16px;
@@ -40,9 +40,42 @@
         }
 
         .hero {
-            background: linear-gradient(220deg, #d9e7fc, #B8D8FF);
+            background: linear-gradient(200deg, #ffffff, #B8D8FF);
             padding: 70px 0;
             color: white;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            font-size: 3.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .btn-upload {
+            background: #60A5FA;
+            color: white;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-upload:hover {
+            background: #5c98dd;
+            color: white;
+            transform: translateY(-1px);
         }
 
         .how-card {
@@ -67,10 +100,30 @@
 
         .upload-box {
             border: 2px dashed #8ab0e6;
-            border-radius: 15px;
+            border-radius: 16px;
             background: white;
-            padding: 60px 20px;
+            padding: 70px 30px;
             text-align: center;
+        }
+
+        .upload-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: grey;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+
+        .upload-action:hover {
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        .upload-formats img {
+            opacity: 0.6;
+            margin-right: 6px;
         }
 
         .upload-icon-wrap {
@@ -120,7 +173,7 @@
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">
                 <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                SmartVerse
+                NeuroNote
             </a>
 
             <div class="ms-auto d-flex align-items-center gap-3">
@@ -132,7 +185,7 @@
     </nav>
 
     <section class="hero">
-        <div class="container">
+        <div class="hero-inner">
             <div class="row align-items-center">
 
                 <div class="col-md-6">
@@ -144,17 +197,17 @@
 
                     </h1>
 
-                    <p class="mt-3 custom-black">
+                    <p class="mt-4 mb-4 custom-black">
                         Perfect for busy students. Save time, study more.
                     </p>
 
-                    <div class="mt-4 d-flex gap-3 flex-wrap">
+                    <div class="mt-5 d-flex gap-4 flex-wrap">
                         <button class="btn btn-primary btn-lg me-3 d-flex align-items-center">
                             <img src="{{ asset('images/folder.png') }}" height="22" class="me-2">
                             Upload PPT
                         </button>
 
-                        <button class="btn btn-primary btn-lg me-3 d-flex align-items-center">
+                        <button class="btn btn-upload btn-lg me-3 d-flex align-items-center">
                             <img src="{{ asset('images/upload.png') }}" height="22" class="me-2">
                             Upload Video
                         </button>
@@ -162,8 +215,8 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 text-center">
-                    <img src="{{ asset('images/hero.png') }}" class="img-fluid" style="max-height:320px">
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <img src="{{ asset('images/hero.png') }}" class="img-fluid" style="max-height:350px">
                 </div>
 
             </div>
@@ -172,81 +225,64 @@
 
     <section class="py-5">
         <div class="container">
-            <h3 class="fw-bold mb-4 text-center">How SmartVerse Works?</h3>
-            <div class="row align-items-center justify-content-center g-3">
-                <div class="col-md-3">
+            <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
+            <div class="row align-items-center justify-content-center flex-nowrap g-3">
+                <div class="col-md-4">
                     <div class="card how-card p-4 h-100">
                         <div class="d-flex">
                             <div class="me-3 text-center">
-                                <div class="step-circle mb-2">1</div>
-                                <img src="{{ asset('images/upload_black.png') }}" width="38">
+                                <div class="step-circle mb-2">1</div> <img src="{{ asset('images/upload_black.png') }}"
+                                    width="38">
                             </div>
-
                             <div>
                                 <h5 class="fw-bold mb-1">Upload Files</h5>
-                                <p class="text-muted mb-0">
-                                    AI reads the files that you uploaded in the current session.
+                                <p class="text-muted mb-0"> AI reads the files that you uploaded in the current session.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-1 text-center d-none d-md-block"> <span><img src="{{ asset('images/arrow.png') }}"
+                            width="45"></span> </div>
 
-                <div class="col-md-1 text-center d-none d-md-block">
-                    <span><img src="{{ asset('images/arrow.png') }}" width="45"></span>
-                </div>
-
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card how-card p-4 h-100">
                         <div class="d-flex">
-
                             <div class="me-3 text-center">
-                                <div class="step-circle mb-2">2</div>
-                                <img src="{{ asset('images/edit.png') }}" width="38">
+                                <div class="step-circle mb-2">2</div> <img src="{{ asset('images/edit.png') }}"
+                                    width="38">
                             </div>
-
                             <div>
                                 <h5 class="fw-bold mb-1">AI Generates Summary</h5>
-                                <p class="text-muted mb-0">
-                                    AI will generate the summary based on what it reads.
-                                </p>
+                                <p class="text-muted mb-0"> AI will generate the summary based on what it reads. </p>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-1 text-center d-none d-md-block">
-                    <span><img src="{{ asset('images/arrow.png') }}" width="45"></span>
-                </div>
-
-                <div class="col-md-3">
+                <div class="col-md-1 text-center d-none d-md-block"> <span><img src="{{ asset('images/arrow.png') }}"
+                            width="45"></span> </div>
+                <div class="col-md-4">
                     <div class="card how-card p-4 h-100">
                         <div class="d-flex">
-
                             <div class="me-3 text-center">
-                                <div class="step-circle mb-2">3</div>
-                                <img src="{{ asset('images/download.png') }}" width="38">
+                                <div class="step-circle mb-2">3</div> <img src="{{ asset('images/download.png') }}"
+                                    width="38">
                             </div>
-
                             <div>
                                 <h5 class="fw-bold mb-1">View & Download</h5>
-                                <p class="text-muted mb-0">
-                                    AI will give a summary in PDF format for you to view and download.
-                                </p>
+                                <p class="text-muted mb-0"> AI will give a summary in PDF format for you to view and
+                                    download. </p>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     <section class="pb-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
 
                     <div class="upload-box">
 
@@ -258,7 +294,25 @@
                         <h4>Upload PPT / Video here</h4>
                         <p class="text-muted">Drag & drop or click to choose file</p>
 
-                        <button class="btn btn-primary mt-3">Choose File</button>
+                        <label for="fileUpload" class="upload-action">
+                            <img src="{{ asset('images/upload_black.png') }}" width="26">
+                            <span>Choose File</span>
+                        </label>
+
+                        <input type="file" id="fileUpload" hidden>
+
+                        <div class="upload-formats mt-3">
+                            <div class="d-flex justify-content-center gap-4 text-muted">
+                                <div>
+                                    <img src="{{ asset('images/Video.png') }}" width="20">
+                                    MP4, AVI, MOV
+                                </div>
+                                <div>
+                                    <img src="{{ asset('images/File.png') }}" width="20">
+                                    PPT, PPTX
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -267,9 +321,9 @@
     </section>
 
     <section class="py-5">
-        <div class="container text-center">
+        <div class="container-fluid text-center px-5">
 
-            <h3 class="fw-bold mb-5">Why SmartVerse?</h3>
+            <h3 class="fw-bold mb-5">Why NeuroNote?</h3>
 
             <div class="row g-4">
 
@@ -291,7 +345,7 @@
                         </div>
 
                         <h5 class="fw-bold">Accurate and Relevant</h5>
-                        <p class="text-muted">SmartVerse captures key points and filters out irrelevant info.</p>
+                        <p class="text-muted">NeuroNote captures key points and filters out irrelevant info.</p>
                     </div>
                 </div>
 
@@ -301,7 +355,7 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Free of Charge</h5>
-                        <p class="text-muted">SmartVerse offers no charges at all.</p>
+                        <p class="text-muted">NeuroNote offers no charges at all.</p>
                     </div>
                 </div>
 
@@ -311,7 +365,7 @@
     </section>
 
     <footer class="text-center py-3 bg-light">
-        @ 2026 SmartVerse All Rights Reserved
+        @ 2026 NeuroNote All Rights Reserved
     </footer>
 
 </body>
