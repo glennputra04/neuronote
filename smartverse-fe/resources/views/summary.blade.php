@@ -166,7 +166,7 @@
             <div class="container">
                 <a class="navbar-brand fw-bold" href="#">
                     <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                    SmartVerse
+                    NeuroNote
                 </a>
 
                 <div class="ms-auto d-flex align-items-center gap-3">
@@ -245,7 +245,7 @@
     <section id="how" class="py-5">
         <div class="container">
 
-            <h3 class="fw-bold mb-4 text-center">How SmartVerse Works?</h3>
+            <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
 
             <div class="row align-items-center justify-content-center g-3">
 
@@ -315,7 +315,7 @@
     <section id="why" class="py-5">
         <div class="container text-center">
 
-            <h3 class="fw-bold mb-5">Why SmartVerse?</h3>
+            <h3 class="fw-bold mb-5">Why NeuroNote?</h3>
 
             <div class="row g-4">
 
@@ -335,7 +335,7 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Accurate and Relevant</h5>
-                        <p class="text-muted">SmartVerse captures key points and filters out irrelevant info.</p>
+                        <p class="text-muted">NeuroNote captures key points and filters out irrelevant info.</p>
                     </div>
                 </div>
 
@@ -345,7 +345,7 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Free of Charge</h5>
-                        <p class="text-muted">SmartVerse offers no charges at all.</p>
+                        <p class="text-muted">NeuroNote offers no charges at all.</p>
                     </div>
                 </div>
             </div>
@@ -353,7 +353,7 @@
     </section>
 
     <footer class="text-center py-3 bg-light">
-        @ 2026 SmartVerse All Rights Reserved
+        @ 2026 NeuroNote All Rights Reserved
     </footer>
 </body>
 
