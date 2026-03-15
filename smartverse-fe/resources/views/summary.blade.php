@@ -1,34 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summary</title>
-
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-
+@extends('layouts.app')
+@section('title', 'Summary - NeuroNote')
+@push('styles')
     <style>
         body {
             background: #f3f4f6;
-        }
-
-        .custom-header {
-            background: #60A5FA;
-        }
-
-        .login-btn {
-            background: #7fb2ea;
-            color: white;
-            border-radius: 8px;
-            padding: 6px 16px;
-            transition: 0.3s;
-        }
-
-        .login-btn:hover {
-            background: #5c98dd;
-            color: white;
-            transform: translateY(-1px);
         }
 
         .file-box {
@@ -158,26 +133,8 @@
             min-height: 230px;
         }
     </style>
-</head>
-
-<body>
-    <section id="navbar">
-        <nav class="navbar navbar-expand-lg navbar-dark custom-header">
-            <div class="container">
-                <a class="navbar-brand fw-bold" href="#">
-                    <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                    SmartVerse
-                </a>
-
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <a class="nav-link text-white" href="#">Home</a>
-                    <a class="nav-link text-white" href="#">About Us</a>
-                    <a class="btn login-btn btn-sm">Login</a>
-                </div>
-            </div>
-        </nav>
-    </section>
-
+@endpush
+@section('content')
     <section id="summary" class="py-4">
         <div class="container">
 
@@ -245,7 +202,7 @@
     <section id="how" class="py-5">
         <div class="container">
 
-            <h3 class="fw-bold mb-4 text-center">How SmartVerse Works?</h3>
+            <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
 
             <div class="row align-items-center justify-content-center g-3">
 
@@ -315,7 +272,7 @@
     <section id="why" class="py-5">
         <div class="container text-center">
 
-            <h3 class="fw-bold mb-5">Why SmartVerse?</h3>
+            <h3 class="fw-bold mb-5">Why NeuroNote?</h3>
 
             <div class="row g-4">
 
@@ -335,7 +292,7 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Accurate and Relevant</h5>
-                        <p class="text-muted">SmartVerse captures key points and filters out irrelevant info.</p>
+                        <p class="text-muted">NeuroNote captures key points and filters out irrelevant info.</p>
                     </div>
                 </div>
 
@@ -345,16 +302,10 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Free of Charge</h5>
-                        <p class="text-muted">SmartVerse offers no charges at all.</p>
+                        <p class="text-muted">NeuroNote offers no charges at all.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <footer class="text-center py-3 bg-light">
-        @ 2026 SmartVerse All Rights Reserved
-    </footer>
-</body>
-
-</html>
+@endsection
