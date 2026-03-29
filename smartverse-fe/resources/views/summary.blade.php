@@ -202,42 +202,28 @@
             </div>
 
             <div class="summary-card mt-4">
-
                 <div class="d-flex justify-content-between align-items-center mb-4">
-
                     <div class="btn-group">
-                        <button class="mode-btn active d-flex align-items-center gap-2">
+                        <button id="btn-bullet" class="mode-btn active d-flex align-items-center gap-2">
                             <img src="{{ asset('images/fast_forward.png') }}" width="22">
                             Bullet Mode
                         </button>
-
-                        <button class="mode-btn d-flex align-items-center gap-2">
+                        <button id="btn-paragraph" class="mode-btn d-flex align-items-center gap-2">
                             <img src="{{ asset('images/paragraph.png') }}" width="22">
                             Paragraph Mode
                         </button>
                     </div>
-
                     <button class="download-btn d-flex align-items-center gap-2">
                         <img src="{{ asset('images/download_cloud.png') }}" width="22">
                         Download
                     </button>
-
                 </div>
 
-                <h3 class="fw-bold mb-3">Lorem Ipsum Dolor Sit Amet</h3>
+                <h3 class="fw-bold mb-1">Hasil Ringkasan Materi</h3>
+                <p class="text-muted mb-4">Total Slides: <span id="total-slides">0</span></p>
 
-                <p class="text-muted">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    labore et
-                    dolore magna aliqua...
-                </p>
-
-                <div class="mt-4 text-center">
-                    <div class="scroll-icon">
-                        <img src="{{ asset('images/arrow_down.png') }}" width="35">
-                    </div>
+                <div id="summary-list">
                 </div>
-
             </div>
         </div>
     </section>
@@ -356,5 +342,63 @@
         @ 2026 NeuroNote All Rights Reserved
     </footer>
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Ambil data dari sessionStorage (atau paste langsung data JSON kamu di sini untuk testing)
+    const rawData = sessionStorage.getItem('last_summary');
+    
+    if (!rawData) return;
+    const data = JSON.parse(rawData);
 
-</html>
+    // Update Total Slides
+    document.getElementById('total-slides').innerText = data.total_slides;
+
+    const container = document.getElementById('summary-list');
+    
+    // Fungsi untuk menampilkan data
+    function renderSummary(isBullet = true) {
+        container.innerHTML = ''; // Kosongkan dulu
+
+        data.slides_summary.forEach((item) => {
+            const section = document.createElement('div');
+            section.className = 'mb-4';
+
+            // Template Judul Per Topik
+            let contentHtml = `
+                <h5 class="fw-bold text-primary">
+                    ${item.topic} 
+                    <span class="badge bg-secondary style="font-size: 10px">Slide: ${item.slide_numbers.join(', ')}</span>
+                </h5>
+            `;
+
+            // Cek apakah mode Bullet atau Paragraph
+            if (isBullet) {
+                // Pecah teks berdasarkan titik untuk jadi list
+                const sentences = item.summary.split('. ').filter(s => s.trim() !== '');
+                contentHtml += '<ul>' + sentences.map(s => `<li>${s}.</li>`).join('') + '</ul>';
+            } else {
+                contentHtml += `<p class="text-dark" style="text-align: justify;">${item.summary}</p>`;
+            }
+
+            section.innerHTML = contentHtml;
+            container.appendChild(section);
+        });
+    }
+
+    // Render pertama kali (Default Bullet)
+    renderSummary(true);
+
+    // Event Listener untuk tombol Mode
+    document.getElementById('btn-bullet').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('btn-paragraph').classList.remove('active');
+        renderSummary(true);
+    });
+
+    document.getElementById('btn-paragraph').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('btn-bullet').classList.remove('active');
+        renderSummary(false);
+    });
+});
+</script>

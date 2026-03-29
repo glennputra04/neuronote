@@ -292,28 +292,18 @@
 
 
                         <h4>Upload PPT / Video here</h4>
-                        <p class="text-muted">Drag & drop or click to choose file</p>
+                        <p class="text-muted" id="file-label">Drag & drop or click to choose file</p>
+                        
+                        <input type="file" id="main-file-input" style="display: none;" accept=".ppt,.pptx,.pdf,.mp4,.avi">
 
-                        <label for="fileUpload" class="upload-action">
-                            <img src="{{ asset('images/upload_black.png') }}" width="26">
-                            <span>Choose File</span>
-                        </label>
-
-                        <input type="file" id="fileUpload" hidden>
-
-                        <div class="upload-formats mt-3">
-                            <div class="d-flex justify-content-center gap-4 text-muted">
-                                <div>
-                                    <img src="{{ asset('images/Video.png') }}" width="20">
-                                    MP4, AVI, MOV
-                                </div>
-                                <div>
-                                    <img src="{{ asset('images/File.png') }}" width="20">
-                                    PPT, PPTX
-                                </div>
-                            </div>
+                        <button id="choose-btn" class="btn btn-primary mt-3" onclick="document.getElementById('main-file-input').click()">
+                            Choose File
+                        </button>
+                        
+                        <div id="loading-status" class="mt-3" style="display: none;">
+                            <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+                            <span class="ms-2">Processing your file...</span>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -369,5 +359,57 @@
     </footer>
 
 </body>
+<script>
+    const fileInput = document.getElementById('main-file-input');
+    const fileLabel = document.getElementById('file-label');
+    const loadingStatus = document.getElementById('loading-status');
+    const chooseBtn = document.getElementById('choose-btn');
+
+    fileInput.addEventListener('change', async function() {
+        if (this.files.length === 0) return;
+
+        const file = this.files[0];
+        fileLabel.innerText = "Selected: " + file.name;
+        chooseBtn.disabled = true;
+        fileInput.disabled = true;
+        
+        // Buat FormData untuk dikirim
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('_token', '{{ csrf_token() }}'); // CSRF Protection Laravel
+
+        // Tampilkan loading
+        loadingStatus.style.display = 'block';
+
+        try {
+            const response = await fetch('/summarize', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                sessionStorage.setItem('last_summary', JSON.stringify(result));
+                window.location.href = '/summary'; 
+            } else {
+                alert("Error: " + (result.message || "Failed to process file"));
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Connection to AI server failed.");
+        } finally {
+            loadingStatus.style.display = 'none';
+            resetUI();
+        }
+    });
+
+    function resetUI() {
+        chooseBtn.disabled = false;
+        fileInput.disabled = false;
+        chooseBtn.innerText = "Choose File";
+        loadingStatus.style.display = 'none';
+    }
+</script>
 
 </html>

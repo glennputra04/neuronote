@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ai_summarizer' => [
+        'base_url' => env('AI_SERVICE_URL'),
+    ],
+
 ];
