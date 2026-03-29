@@ -6,7 +6,7 @@ FastAPI-based backend service that extracts text from PowerPoint (.pptx) files a
 
 ## Features
 
-- Upload PPTX file
+- Upload PPTX / PPT / PDF file
 - Extract text automatically
 - Generate summary using Transformer model
 - Swagger API documentation
@@ -15,12 +15,14 @@ FastAPI-based backend service that extracts text from PowerPoint (.pptx) files a
 
 ## Tech Stack
 
-- Python
-- FastAPI
+- Transformers
+- Fastapi
 - Uvicorn
-- HuggingFace Transformers
-- PyTorch
-- python-pptx
+- Numpy
+- Pillow
+- Pymupdf
+- Rapidocr-onnxruntime
+- Torch
 
 ---
 
@@ -79,24 +81,30 @@ http://127.0.0.1:8001/docs
 
 ### POST /summarize
 
-Upload a `.pptx` file.
+Upload a `.pptx / .ppt / .pdf` file.
 
 Response:
 
 ```json
 {
-  "summary": "Generated summary text..."
+  "topic": "Title Learning Objectives For Unix Process Management System...",
+  "slide_numbers": [
+      1,2,3,...
+      ],
+  "summary": "The text provides information about the different types of processes..."
 }
 ```
 
 ## Notes
 
-- First run will download model (~250MB)
+- First run will download model
 - Ensure internet connection available on first start
 
 ---
 
-## 👨‍💻 Author
+## Author
 
-Your Name  
+Glenn Putra Laymando
 Software Engineer
+
+...

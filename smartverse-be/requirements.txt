@@ -1,9 +1,8 @@
 transformers==4.36.2
 fastapi
 uvicorn
-torch
-python-pptx
-python-multipart
-scikit-learn
+numpy
 pillow
-pytesseract
+pymupdf
+rapidocr-onnxruntime
+torch
