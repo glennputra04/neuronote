@@ -1,3 +1,5 @@
-smartverse/vendor/
-smartverse/node_modules/
-smartverse/.env
+smartverse-fe/vendor/
+smartverse-fe/node_modules/
+smartverse-fe/.env
+smartverse-be/temp/
+smartverse-be/venv/

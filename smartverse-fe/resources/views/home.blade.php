@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartVerse</title>
+    <title>NeuroNote</title>
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -173,7 +173,7 @@
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">
                 <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                SmartVerse
+                NeuroNote
             </a>
 
             <div class="ms-auto d-flex align-items-center gap-3">
@@ -225,7 +225,7 @@
 
     <section class="py-5">
         <div class="container">
-            <h3 class="fw-bold mb-4 text-center">How SmartVerse Works?</h3>
+            <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
             <div class="row align-items-center justify-content-center flex-nowrap g-3">
                 <div class="col-md-4">
                     <div class="card how-card p-4 h-100">
@@ -292,28 +292,18 @@
 
 
                         <h4>Upload PPT / Video here</h4>
-                        <p class="text-muted">Drag & drop or click to choose file</p>
+                        <p class="text-muted" id="file-label">Drag & drop or click to choose file</p>
+                        
+                        <input type="file" id="main-file-input" style="display: none;" accept=".ppt,.pptx,.pdf,.mp4,.avi">
 
-                        <label for="fileUpload" class="upload-action">
-                            <img src="{{ asset('images/upload_black.png') }}" width="26">
-                            <span>Choose File</span>
-                        </label>
-
-                        <input type="file" id="fileUpload" hidden>
-
-                        <div class="upload-formats mt-3">
-                            <div class="d-flex justify-content-center gap-4 text-muted">
-                                <div>
-                                    <img src="{{ asset('images/Video.png') }}" width="20">
-                                    MP4, AVI, MOV
-                                </div>
-                                <div>
-                                    <img src="{{ asset('images/File.png') }}" width="20">
-                                    PPT, PPTX
-                                </div>
-                            </div>
+                        <button id="choose-btn" class="btn btn-primary mt-3" onclick="document.getElementById('main-file-input').click()">
+                            Choose File
+                        </button>
+                        
+                        <div id="loading-status" class="mt-3" style="display: none;">
+                            <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+                            <span class="ms-2">Processing your file...</span>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -323,7 +313,7 @@
     <section class="py-5">
         <div class="container-fluid text-center px-5">
 
-            <h3 class="fw-bold mb-5">Why SmartVerse?</h3>
+            <h3 class="fw-bold mb-5">Why NeuroNote?</h3>
 
             <div class="row g-4">
 
@@ -345,7 +335,7 @@
                         </div>
 
                         <h5 class="fw-bold">Accurate and Relevant</h5>
-                        <p class="text-muted">SmartVerse captures key points and filters out irrelevant info.</p>
+                        <p class="text-muted">NeuroNote captures key points and filters out irrelevant info.</p>
                     </div>
                 </div>
 
@@ -355,7 +345,7 @@
                             <img src="{{ asset('images/check_circle.png') }}" width="36">
                         </div>
                         <h5 class="fw-bold">Free of Charge</h5>
-                        <p class="text-muted">SmartVerse offers no charges at all.</p>
+                        <p class="text-muted">NeuroNote offers no charges at all.</p>
                     </div>
                 </div>
 
@@ -365,9 +355,61 @@
     </section>
 
     <footer class="text-center py-3 bg-light">
-        @ 2026 SmartVerse All Rights Reserved
+        @ 2026 NeuroNote All Rights Reserved
     </footer>
 
 </body>
+<script>
+    const fileInput = document.getElementById('main-file-input');
+    const fileLabel = document.getElementById('file-label');
+    const loadingStatus = document.getElementById('loading-status');
+    const chooseBtn = document.getElementById('choose-btn');
+
+    fileInput.addEventListener('change', async function() {
+        if (this.files.length === 0) return;
+
+        const file = this.files[0];
+        fileLabel.innerText = "Selected: " + file.name;
+        chooseBtn.disabled = true;
+        fileInput.disabled = true;
+        
+        // Buat FormData untuk dikirim
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('_token', '{{ csrf_token() }}'); // CSRF Protection Laravel
+
+        // Tampilkan loading
+        loadingStatus.style.display = 'block';
+
+        try {
+            const response = await fetch('/summarize', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                sessionStorage.setItem('last_summary', JSON.stringify(result));
+                window.location.href = '/summary'; 
+            } else {
+                alert("Error: " + (result.message || "Failed to process file"));
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Connection to AI server failed.");
+        } finally {
+            loadingStatus.style.display = 'none';
+            resetUI();
+        }
+    });
+
+    function resetUI() {
+        chooseBtn.disabled = false;
+        fileInput.disabled = false;
+        chooseBtn.innerText = "Choose File";
+        loadingStatus.style.display = 'none';
+    }
+</script>
 
 </html>
