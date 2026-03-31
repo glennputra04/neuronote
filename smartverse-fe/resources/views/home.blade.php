@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroNote</title>
-
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-
+@extends('layouts.app')
+@section('title', 'Home - NeuroNote')
+@push('styles')
     <style>
         body {
             background: #f3f4f6;
@@ -19,24 +12,6 @@
 
         .custom-black {
             color: black;
-        }
-
-        .custom-header {
-            background: #60A5FA;
-        }
-
-        .login-btn {
-            background: #ABD0FF;
-            color: white;
-            border-radius: 8px;
-            padding: 6px 16px;
-            transition: 0.3s;
-        }
-
-        .login-btn:hover {
-            background: #5c98dd;
-            color: white;
-            transform: translateY(-1px);
         }
 
         .hero {
@@ -137,13 +112,11 @@
             margin: auto;
         }
 
-
         .card-shadow {
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border: none;
             border-radius: 12px;
         }
-
 
         .icon-box {
             width: 70px;
@@ -165,25 +138,9 @@
             min-height: 230px;
         }
     </style>
-</head>
+@endpush
 
-<body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark custom-header">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                NeuroNote
-            </a>
-
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <a class="nav-link text-white" href="#">Home</a>
-                <a class="nav-link text-white" href="#">About Us</a>
-                <a class="btn login-btn btn-sm">Login</a>
-            </div>
-        </div>
-    </nav>
-
+@section('content')
     <section class="hero">
         <div class="hero-inner">
             <div class="row align-items-center">
@@ -226,8 +183,8 @@
     <section class="py-5">
         <div class="container">
             <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
-            <div class="row align-items-center justify-content-center flex-nowrap g-3">
-                <div class="col-md-4">
+            <div class="row align-items-center justify-content-center g-3">
+                <div class="col-md-3">
                     <div class="card how-card p-4 h-100">
                         <div class="d-flex">
                             <div class="me-3 text-center">
@@ -293,13 +250,15 @@
 
                         <h4>Upload PPT / Video here</h4>
                         <p class="text-muted" id="file-label">Drag & drop or click to choose file</p>
-                        
-                        <input type="file" id="main-file-input" style="display: none;" accept=".ppt,.pptx,.pdf,.mp4,.avi">
 
-                        <button id="choose-btn" class="btn btn-primary mt-3" onclick="document.getElementById('main-file-input').click()">
+                        <input type="file" id="main-file-input" style="display: none;"
+                            accept=".ppt,.pptx,.pdf,.mp4,.avi">
+
+                        <button id="choose-btn" class="btn btn-primary mt-3"
+                            onclick="document.getElementById('main-file-input').click()">
                             Choose File
                         </button>
-                        
+
                         <div id="loading-status" class="mt-3" style="display: none;">
                             <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
                             <span class="ms-2">Processing your file...</span>
@@ -353,63 +312,59 @@
 
         </div>
     </section>
+@endsection
 
-    <footer class="text-center py-3 bg-light">
-        @ 2026 NeuroNote All Rights Reserved
-    </footer>
+@push('scripts')
+    <script>
+        const fileInput = document.getElementById('main-file-input');
+        const fileLabel = document.getElementById('file-label');
+        const loadingStatus = document.getElementById('loading-status');
+        const chooseBtn = document.getElementById('choose-btn');
 
-</body>
-<script>
-    const fileInput = document.getElementById('main-file-input');
-    const fileLabel = document.getElementById('file-label');
-    const loadingStatus = document.getElementById('loading-status');
-    const chooseBtn = document.getElementById('choose-btn');
+        fileInput.addEventListener('change', async function() {
+            if (this.files.length === 0) return;
 
-    fileInput.addEventListener('change', async function() {
-        if (this.files.length === 0) return;
+            const file = this.files[0];
+            fileLabel.innerText = "Selected: " + file.name;
+            chooseBtn.disabled = true;
+            fileInput.disabled = true;
 
-        const file = this.files[0];
-        fileLabel.innerText = "Selected: " + file.name;
-        chooseBtn.disabled = true;
-        fileInput.disabled = true;
-        
-        // Buat FormData untuk dikirim
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('_token', '{{ csrf_token() }}'); // CSRF Protection Laravel
+            // Buat FormData untuk dikirim
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('_token', '{{ csrf_token() }}'); // CSRF Protection Laravel
 
-        // Tampilkan loading
-        loadingStatus.style.display = 'block';
+            // Tampilkan loading
+            loadingStatus.style.display = 'block';
 
-        try {
-            const response = await fetch('/summarize', {
-                method: 'POST',
-                body: formData
-            });
+            try {
+                const response = await fetch('/summarize', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (response.ok) {
-                sessionStorage.setItem('last_summary', JSON.stringify(result));
-                window.location.href = '/summary'; 
-            } else {
-                alert("Error: " + (result.message || "Failed to process file"));
+                if (response.ok) {
+                    sessionStorage.setItem('last_summary', JSON.stringify(result));
+                    window.location.href = '/summary';
+                } else {
+                    alert("Error: " + (result.message || "Failed to process file"));
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Connection to AI server failed.");
+            } finally {
+                loadingStatus.style.display = 'none';
+                resetUI();
             }
-        } catch (error) {
-            console.error(error);
-            alert("Connection to AI server failed.");
-        } finally {
+        });
+
+        function resetUI() {
+            chooseBtn.disabled = false;
+            fileInput.disabled = false;
+            chooseBtn.innerText = "Choose File";
             loadingStatus.style.display = 'none';
-            resetUI();
         }
-    });
-
-    function resetUI() {
-        chooseBtn.disabled = false;
-        fileInput.disabled = false;
-        chooseBtn.innerText = "Choose File";
-        loadingStatus.style.display = 'none';
-    }
-</script>
-
-</html>
+    </script>
+@endpush

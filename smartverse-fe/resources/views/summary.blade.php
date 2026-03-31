@@ -1,34 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summary</title>
-
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-
+@extends('layouts.app')
+@section('title', 'Summary - NeuroNote')
+@push('styles')
     <style>
         body {
             background: #f3f4f6;
-        }
-
-        .custom-header {
-            background: #60A5FA;
-        }
-
-        .login-btn {
-            background: #7fb2ea;
-            color: white;
-            border-radius: 8px;
-            padding: 6px 16px;
-            transition: 0.3s;
-        }
-
-        .login-btn:hover {
-            background: #5c98dd;
-            color: white;
-            transform: translateY(-1px);
         }
 
         .file-box {
@@ -158,26 +133,8 @@
             min-height: 230px;
         }
     </style>
-</head>
-
-<body>
-    <section id="navbar">
-        <nav class="navbar navbar-expand-lg navbar-dark custom-header">
-            <div class="container">
-                <a class="navbar-brand fw-bold" href="#">
-                    <img src="{{ asset('images/logo.png') }}" height="30" class="me-2">
-                    NeuroNote
-                </a>
-
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <a class="nav-link text-white" href="#">Home</a>
-                    <a class="nav-link text-white" href="#">About Us</a>
-                    <a class="btn login-btn btn-sm">Login</a>
-                </div>
-            </div>
-        </nav>
-    </section>
-
+@endpush
+@section('content')
     <section id="summary" class="py-4">
         <div class="container">
 
@@ -337,68 +294,67 @@
             </div>
         </div>
     </section>
+@endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil data dari sessionStorage (atau paste langsung data JSON kamu di sini untuk testing)
+            const rawData = sessionStorage.getItem('last_summary');
 
-    <footer class="text-center py-3 bg-light">
-        @ 2026 NeuroNote All Rights Reserved
-    </footer>
-</body>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Ambil data dari sessionStorage (atau paste langsung data JSON kamu di sini untuk testing)
-    const rawData = sessionStorage.getItem('last_summary');
-    
-    if (!rawData) return;
-    const data = JSON.parse(rawData);
+            if (!rawData) return;
+            const data = JSON.parse(rawData);
 
-    // Update Total Slides
-    document.getElementById('total-slides').innerText = data.total_slides;
+            // Update Total Slides
+            document.getElementById('total-slides').innerText = data.total_slides;
 
-    const container = document.getElementById('summary-list');
-    
-    // Fungsi untuk menampilkan data
-    function renderSummary(isBullet = true) {
-        container.innerHTML = ''; // Kosongkan dulu
+            const container = document.getElementById('summary-list');
 
-        data.slides_summary.forEach((item) => {
-            const section = document.createElement('div');
-            section.className = 'mb-4';
+            // Fungsi untuk menampilkan data
+            function renderSummary(isBullet = true) {
+                container.innerHTML = ''; // Kosongkan dulu
 
-            // Template Judul Per Topik
-            let contentHtml = `
+                data.slides_summary.forEach((item) => {
+                    const section = document.createElement('div');
+                    section.className = 'mb-4';
+
+                    // Template Judul Per Topik
+                    let contentHtml = `
                 <h5 class="fw-bold text-primary">
-                    ${item.topic} 
-                    <span class="badge bg-secondary style="font-size: 10px">Slide: ${item.slide_numbers.join(', ')}</span>
+                    ${item.topic}
+                    <span class="badge bg-secondary" style="font-size: 10px">Slide: ${item.slide_numbers.join(', ')}</span>
                 </h5>
             `;
 
-            // Cek apakah mode Bullet atau Paragraph
-            if (isBullet) {
-                // Pecah teks berdasarkan titik untuk jadi list
-                const sentences = item.summary.split('. ').filter(s => s.trim() !== '');
-                contentHtml += '<ul>' + sentences.map(s => `<li>${s}.</li>`).join('') + '</ul>';
-            } else {
-                contentHtml += `<p class="text-dark" style="text-align: justify;">${item.summary}</p>`;
+                    // Cek apakah mode Bullet atau Paragraph
+                    if (isBullet) {
+                        // Pecah teks berdasarkan titik untuk jadi list
+                        const sentences = item.summary.split('. ').filter(s => s.trim() !== '');
+                        contentHtml += '<ul>' + sentences.map(s => `<li>${s}.</li>`).join('') + '</ul>';
+                    } else {
+                        contentHtml +=
+                            `<p class="text-dark" style="text-align: justify;">${item.summary}</p>`;
+                    }
+
+                    section.innerHTML = contentHtml;
+                    container.appendChild(section);
+                });
             }
 
-            section.innerHTML = contentHtml;
-            container.appendChild(section);
+            // Render pertama kali (Default Bullet)
+            renderSummary(true);
+
+            // Event Listener untuk tombol Mode
+            document.getElementById('btn-bullet').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('btn-paragraph').classList.remove('active');
+                renderSummary(true);
+            });
+
+            document.getElementById('btn-paragraph').addEventListener('click', function() {
+                this.classList.add('active');
+                document.getElementById('btn-bullet').classList.remove('active');
+                renderSummary(false);
+            });
         });
-    }
-
-    // Render pertama kali (Default Bullet)
-    renderSummary(true);
-
-    // Event Listener untuk tombol Mode
-    document.getElementById('btn-bullet').addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('btn-paragraph').classList.remove('active');
-        renderSummary(true);
-    });
-
-    document.getElementById('btn-paragraph').addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('btn-bullet').classList.remove('active');
-        renderSummary(false);
-    });
-});
-</script>
+    </script>
+@endpush
