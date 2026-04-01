@@ -64,7 +64,15 @@
             <div class="ms-auto d-flex align-items-center gap-3">
                 <a class="nav-link text-white" href="/">Home</a>
                 <a class="nav-link text-white" href="#">About Us</a>
-                <a class="btn login-btn btn-sm" href="/login">Login</a>
+                @auth
+                    <a class="nav-link text-white" href="/summary">Summary</a>
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn login-btn btn-sm">Logout</button>
+                    </form>
+                @else
+                    <a class="btn login-btn btn-sm" href="/login">Login</a>
+                @endauth
             </div>
         </div>
     </nav>

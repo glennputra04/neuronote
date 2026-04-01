@@ -94,18 +94,27 @@
                 <p class="text-center login-text mb-4">Already have an account?
                     <a href="/login" class="text-decoration-underline">Login here</a>
                 </p>
-                <form>
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2" role="alert">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('register.store') }}">
+                    @csrf
                     <div class="mb-3">
-                        <label class="form-label">Nama</label>
-                        <input type="text" class="form-control" placeholder="Masukkan nama">
+                        <label for="name" class="form-label">Nama</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Masukkan nama"
+                            value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" placeholder="Masukkan email">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan email"
+                            value="{{ old('email') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nomor Telepon</label>
-                        <input type="text" class="form-control" placeholder="Masukkan nomor telepon">
+                        <label for="phone_number" class="form-label">Nomor Telepon</label>
+                        <input type="text" id="phone_number" name="phone_number" class="form-control"
+                            placeholder="Masukkan nomor telepon" value="{{ old('phone_number') }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between align-items-center">
@@ -117,7 +126,7 @@
                             </span>
                         </label>
 
-                        <input type="password" id="password" class="form-control">
+                        <input type="password" id="password" name="password" class="form-control" required>
                     </div>
 
 
@@ -132,7 +141,8 @@
                             </span>
                         </label>
 
-                        <input type="password" id="confirmPassword" class="form-control">
+                        <input type="password" id="confirmPassword" name="password_confirmation" class="form-control"
+                            required>
                     </div>
                     <button type="submit" class="btn register-btn w-100 text-white">Register</button>
                 </form>
@@ -160,5 +170,3 @@
         }
     </script>
 @endpush
-
-</html>

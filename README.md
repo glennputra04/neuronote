@@ -105,6 +105,7 @@ Response:
 ## Author
 
 Glenn Putra Laymando
+Antonio Owen Putra Amadeus
 Software Engineer
 
 ...

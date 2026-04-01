@@ -1,18 +1,21 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SummarizerController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WelcomeController::class, 'index']);
 
-Route::get('/summary', [SummarizerController::class, 'summary']);
+Route::get('/summary', [SummarizerController::class, 'summary'])->middleware('auth');
 
-Route::post('/summarize', [SummarizerController::class, 'index']);
+Route::post('/summarize', [SummarizerController::class, 'index'])->middleware('auth');
 
-Route::get('/register', function () {
-    return view('register');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
-Route::get('/login', function () {
-    return view('login');
-});
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');

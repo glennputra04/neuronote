@@ -110,10 +110,22 @@
                 <p class="text-center register-text mb-4">Don't have an account?
                     <a href="/register" class="text-decoration-underline">Register here</a>
                 </p>
-                <form>
+                @if (session('status'))
+                    <div class="alert alert-success py-2" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2" role="alert">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('login.store') }}">
+                    @csrf
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" placeholder="Masukkan email">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan email"
+                            value="{{ old('email') }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between align-items-center">
@@ -125,11 +137,11 @@
                             </span>
                         </label>
 
-                        <input type="password" id="password" class="form-control">
+                        <input type="password" id="password" name="password" class="form-control" required>
                     </div>
                     <div class="form-check mb-4">
-                        <input class="form-check-input" type="checkbox">
-                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
                             Remember me
                         </label>
                     </div>
