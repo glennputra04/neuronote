@@ -4,10 +4,11 @@ FastAPI-based backend service with laravel frontend that extracts text from Powe
 
 ## Objectives
 - Help users quickly understand material without going through full PPTs or videos
-- Convert lengthy content into clear, essential summaries
+- Convert lengthy content into clear, concise and essential summaries
 - Save time and improve learning efficiency
 - Highlight key points for review or exam/presentation preparation
 - Support self-learning with more accessible and practical information
+- Ensures users able to use the website's service as much as they want with free of charge.
 
 ---
 
@@ -113,6 +114,7 @@ Response:
 
 - First run will download model
 - Ensure internet connection available on first start
+- Website prototype design: https://www.figma.com/design/St735PxlLhMC1lVU5sT2fk/NeuroNote?node-id=1-6622&t=0nARk4u90RGhk4Vc-0
 
 ---
 
