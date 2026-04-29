@@ -1,4 +1,4 @@
-# PPT Summarizer API
+# PPT Summarizer APP
 
 FastAPI-based backend service that extracts text from PowerPoint (.pptx) files and generates AI-based summaries using HuggingFace Transformers.
 
@@ -28,7 +28,7 @@ FastAPI-based backend service that extracts text from PowerPoint (.pptx) files a
 
 ## Installation
 
-### 1️Clone repository
+### Clone repository
 
 ```bash
 git clone <your-repo-url>
@@ -105,7 +105,15 @@ Response:
 ## Author
 
 Glenn Putra Laymando
+Sofware Engineer
+
 Antonio Owen Putra Amadeus
+Software Engineer
+
+Theo Filus Iglesias Triadi
+Software Engineer
+
+Justin Sufrapto
 Software Engineer
 
 ...
