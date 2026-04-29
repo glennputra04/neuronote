@@ -117,6 +117,16 @@ Response:
 
 ---
 
+## Usage
+
+1. User uploads a PPTX / PPT / PDF file and then wait for it to be read and analyzed.
+2. The website then generates a PDF file with summarized content of the uploaded file.
+3. User is able to toggle summary type (bullet for concise summary, paragraph for long and detailed summary)
+4. User is then able to download the summary file with PDF format.
+5. The summary file will then be moved to history section for user to revisit.
+
+---
+
 ## Author
 
 Glenn Putra Laymando
