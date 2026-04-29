@@ -13,8 +13,17 @@ from collections import Counter
 import re
 from fastapi import BackgroundTasks
 import torch
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 ocr = RapidOCR()
 
 summarizer = pipeline(
