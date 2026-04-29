@@ -183,9 +183,9 @@
     <section class="py-5">
         <div class="container">
             <h3 class="fw-bold mb-4 text-center">How NeuroNote Works?</h3>
-            <div class="row align-items-center justify-content-center g-3">
-                <div class="col-md-3">
-                    <div class="card how-card p-4 h-100">
+            <div class="row align-items-stretch justify-content-center g-2">
+                <div class="col-md-3 d-flex">
+                    <div class="card how-card p-4 h-100 w-100">
                         <div class="d-flex">
                             <div class="me-3 text-center">
                                 <div class="step-circle mb-2">1</div> <img src="{{ asset('images/upload_black.png') }}"
@@ -199,11 +199,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1 text-center d-none d-md-block"> <span><img src="{{ asset('images/arrow.png') }}"
-                            width="45"></span> </div>
+                <div class="col-auto d-flex align-items-center"> <span><img src="{{ asset('images/arrow.png') }}"
+                            width="35"></span> </div>
 
-                <div class="col-md-4">
-                    <div class="card how-card p-4 h-100">
+                <div class="col-md-3 d-flex">
+                    <div class="card how-card p-4 h-100 w-100">
                         <div class="d-flex">
                             <div class="me-3 text-center">
                                 <div class="step-circle mb-2">2</div> <img src="{{ asset('images/edit.png') }}"
@@ -216,10 +216,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1 text-center d-none d-md-block"> <span><img src="{{ asset('images/arrow.png') }}"
-                            width="45"></span> </div>
-                <div class="col-md-4">
-                    <div class="card how-card p-4 h-100">
+                <div class="col-auto d-flex align-items-center"> <span><img src="{{ asset('images/arrow.png') }}"
+                            width="35"></span> </div>
+                <div class="col-md-3 d-flex">
+                    <div class="card how-card p-4 h-100 w-100">
                         <div class="d-flex">
                             <div class="me-3 text-center">
                                 <div class="step-circle mb-2">3</div> <img src="{{ asset('images/download.png') }}"
