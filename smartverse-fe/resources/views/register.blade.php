@@ -3,7 +3,7 @@
 @push('styles')
     <style>
         body {
-            background: url("/images/background.png") no-repeat center center/cover;
+            background: url("/images/register.jpg") no-repeat center center/cover;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -108,8 +108,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan email"
-                            value="{{ old('email') }}" required>
+                        <input type="email" id="email" name="email" class="form-control"
+                            placeholder="Masukkan email" value="{{ old('email') }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number" class="form-label">Nomor Telepon</label>
@@ -144,7 +144,8 @@
                         <input type="password" id="confirmPassword" name="password_confirmation" class="form-control"
                             required>
                     </div>
-                    <button id="registerSubmitBtn" type="submit" class="btn register-btn w-100 text-white">Register</button>
+                    <button id="registerSubmitBtn" type="submit"
+                        class="btn register-btn w-100 text-white">Register</button>
                 </form>
             </div>
         </div>

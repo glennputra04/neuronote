@@ -3,7 +3,7 @@
 @push('styles')
     <style>
         body {
-            background: url("/images/background.png") no-repeat center center/cover;
+            background: url("/images/login.jpg") no-repeat center center/cover;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -124,8 +124,8 @@
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Masukkan email"
-                            value="{{ old('email') }}" required>
+                        <input type="email" id="email" name="email" class="form-control"
+                            placeholder="Masukkan email" value="{{ old('email') }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between align-items-center">

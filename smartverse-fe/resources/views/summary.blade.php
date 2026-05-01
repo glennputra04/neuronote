@@ -148,7 +148,7 @@
 
                     <div class="d-flex align-items-center">
                         <img src="{{ asset('images/ppt.png') }}" width="40" class="me-3">
-                        <strong>Example.pptx</strong>
+                        <strong id="file-name">Example.pptx</strong>
                     </div>
 
                     <button class="btn cancel p-0">
@@ -304,6 +304,9 @@
             if (!rawData) return;
             const data = JSON.parse(rawData);
 
+            if (data.file_name) {
+                document.getElementById('file-name').innerText = data.file_name;
+            }
             // Update Total Slides
             document.getElementById('total-slides').innerText = data.total_slides;
 
