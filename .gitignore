@@ -3,3 +3,5 @@ smartverse-fe/node_modules/
 smartverse-fe/.env
 smartverse-be/temp/
 smartverse-be/venv/
+smartverse-be/__pycache__/
+*.pyc
