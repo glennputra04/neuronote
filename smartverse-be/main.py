@@ -27,6 +27,8 @@ summarizer = pipeline(
 #     summarizer.model, {torch.nn.Linear}, dtype=torch.qint8
 # )
 
+# ==================================== PPT SUMMARIZER =========================================
+#region PPT SUMMARIZER
 def remove_temp_files(paths: list):
     for path in paths:
         try:
@@ -369,3 +371,120 @@ async def summarize_ppt(background_tasks: BackgroundTasks, file: UploadFile = Fi
         "total_slides": len(slide_summaries),
         "slides_summary": slide_summaries
     }
+# ==================================== VIDEO SUMMARIZER =========================================
+#region VIDEO SUMMARIZER
+
+from faster_whisper import WhisperModel
+from moviepy import VideoFileClip
+
+# Load Model
+stt_model = WhisperModel("tiny", device="cpu", compute_type="int8")
+
+def extract_audio(video_path, audio_path):
+    video = VideoFileClip(video_path)
+    video.audio.write_audiofile(audio_path, logger=None,fps=16000, bitrate="64k")
+    video.close()
+
+def transcribe_audio(audio_path):
+    segments, _ = stt_model.transcribe(audio_path)
+
+    return [
+        {"start": seg.start, "end": seg.end, "text": seg.text}
+        for seg in segments
+    ]
+
+# Chunking every 3 min
+def group_segments_by_time(segments, chunk_duration=180):
+
+    if not segments:
+        return {"error": "No speech detected"}
+    chunks = []
+    current_chunk = []
+    chunk_start = segments[0]["start"]
+
+    for seg in segments:
+        if seg["end"] - chunk_start <= chunk_duration:
+            current_chunk.append(seg)
+        else:
+            chunks.append(current_chunk)
+            current_chunk = [seg]
+            chunk_start = seg["start"]
+
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+
+def build_text(chunk):
+    return " ".join([seg["text"] for seg in chunk])
+
+
+@app.post("/summarize-video")
+async def summarize_video(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+    print("1. Video upload received")
+    os.makedirs("temp", exist_ok=True)
+    
+    video_location = f"temp/{file.filename}"
+    audio_location = f"temp/{os.path.splitext(file.filename)[0]}.mp3"
+    
+    with open(video_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        print("2. Extracting audio...")
+        extract_audio(video_location, audio_location)
+
+        print("3. Transcribing audio (STT)...")
+        segments = transcribe_audio(audio_location)
+
+        print("4. Grouping audio Segments...")
+        chunks = group_segments_by_time(segments)
+
+        print("5. Summarizing...")
+        results = []
+        
+        for i, chunk in enumerate(chunks):
+            print(f"Segment : {i}")
+            text = build_text(chunk)
+
+            if not text.strip():
+                continue
+
+            # batasi panjang biar gak ke-truncate model
+            words = text.split()
+            if len(words) > 400:
+                text = " ".join(words[:400])
+
+            prompt = (
+                f"Act as a student making study notes. Summarize the actual facts and definitions from this text in a short paragraph. " + \
+                f"Be direct and do not meta-describe the text: {text}"
+            )
+
+            summary_result = summarizer(
+                prompt,
+                max_length=150,
+                min_length=40,
+                truncation=True
+            )
+
+            topic = get_general_topic(text)
+
+            results.append({
+                "topic": topic,
+                "chunk_numbers": i + 1,
+                "summary": summary_result[0]["summary_text"]
+            })
+
+        # Cleanup files
+        background_tasks.add_task(remove_temp_files, [video_location, audio_location])
+
+        return {
+            "filename": file.filename,
+            "total_chunks": len(results),
+            "chunks": results
+        }
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"error": str(e)}
