@@ -170,7 +170,7 @@
                             Paragraph Mode
                         </button>
                     </div>
-                    <button class="download-btn d-flex align-items-center gap-2">
+                    <button id="download-btn" class="download-btn d-flex align-items-center gap-2">
                         <img src="{{ asset('images/download_cloud.png') }}" width="22">
                         Download
                     </button>
@@ -295,6 +295,7 @@
         </div>
     </section>
 @endsection
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -303,6 +304,8 @@
 
             if (!rawData) return;
             const data = JSON.parse(rawData);
+
+            let currentMode = 'bullet';
 
             if (data.file_name) {
                 document.getElementById('file-name').innerText = data.file_name;
@@ -348,15 +351,109 @@
 
             // Event Listener untuk tombol Mode
             document.getElementById('btn-bullet').addEventListener('click', function() {
+                currentMode = 'bullet';
                 this.classList.add('active');
                 document.getElementById('btn-paragraph').classList.remove('active');
                 renderSummary(true);
             });
 
             document.getElementById('btn-paragraph').addEventListener('click', function() {
+                currentMode = 'paragraph';
                 this.classList.add('active');
                 document.getElementById('btn-bullet').classList.remove('active');
                 renderSummary(false);
+            });
+            const downloadBtn = document.getElementById('download-btn');
+
+            downloadBtn.addEventListener('click', function() {
+
+                const {
+                    jsPDF
+                } = window.jspdf;
+                const doc = new jsPDF();
+
+                let y = 20;
+
+                // Judul PDF
+                doc.setFontSize(18);
+                doc.text("NeuroNote Summary", 20, y);
+
+                y += 10;
+
+                // Nama file
+                doc.setFontSize(12);
+                doc.text(`File: ${data.file_name || 'Unknown File'}`, 20, y);
+
+                y += 10;
+
+                // Total slides
+                doc.text(`Total Slides: ${data.total_slides}`, 20, y);
+
+                y += 15;
+
+                // Isi summary
+                data.slides_summary.forEach((item, index) => {
+
+                    // Topic
+                    doc.setFontSize(14);
+                    doc.text(`${index + 1}. ${item.topic}`, 20, y);
+
+                    y += 8;
+
+                    // Summary text
+                    doc.setFontSize(11);
+
+                    if (currentMode === 'bullet') {
+
+                        const sentences = item.summary
+                            .split('. ')
+                            .filter(s => s.trim() !== '');
+
+                        sentences.forEach(sentence => {
+
+                            const bulletText = "• " + sentence.trim();
+
+                            const splitText = doc.splitTextToSize(
+                                bulletText,
+                                165
+                            );
+
+                            doc.text(splitText, 25, y);
+
+                            y += splitText.length * 6;
+
+                            if (y > 270) {
+                                doc.addPage();
+                                y = 20;
+                            }
+                        });
+
+                        y += 5;
+
+                    } else {
+
+                        const splitText = doc.splitTextToSize(
+                            item.summary,
+                            170
+                        );
+
+                        doc.text(splitText, 20, y);
+
+                        y += splitText.length * 6 + 3;
+                    }
+
+                    // kalau halaman penuh
+                    if (y > 270 && index < data.slides_summary.length - 1) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                });
+
+                // Nama file PDF
+                const pdfName = (data.file_name || 'summary')
+                    .replace(/\.[^/.]+$/, "") + "_summary.pdf";
+
+                doc.save(pdfName);
             });
         });
     </script>
