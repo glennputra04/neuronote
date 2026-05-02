@@ -6,3 +6,5 @@ pillow
 pymupdf
 rapidocr-onnxruntime
 torch
+faster-whisper
+moviepy
