@@ -13,12 +13,12 @@ class SummarizerServices
 
         // Handle Video
         if (str_contains($mimeType, 'video')) {
-            return $this->summarizeVideo($file);
+            return $this->summarize($file,'/summarize-video');
         }
 
         // Handle PPT/PDF/PPTX
         if (str_contains($mimeType, 'pdf') || str_contains($mimeType, 'presentation') || str_contains($mimeType, 'powerpoint')) {
-            return $this->summarizeDocument($file);
+            return $this->summarize($file,'/summarize');
         }
 
         return [
@@ -27,10 +27,10 @@ class SummarizerServices
         ];
     }
 
-    private function summarizeDocument($file)
+    private function summarize($file,$endpoint)
     {
         $baseUrl = config('services.ai_summarizer.base_url'); 
-        $url = $baseUrl . '/summarize';
+        $url = $baseUrl . $endpoint;
         
         /** @var Response $response */ //
         $response = Http::timeout(300)->attach(
@@ -40,10 +40,5 @@ class SummarizerServices
         )->post($url);
 
         return $response->json();
-    }
-
-    private function summarizeVideo($file)
-    {
-       // TODO
     }
 }

@@ -489,9 +489,15 @@ async def summarize_video(background_tasks: BackgroundTasks, file: UploadFile = 
         background_tasks.add_task(remove_temp_files, [video_location, audio_location])
 
         return {
-            "filename": file.filename,
-            "total_chunks": len(results),
-            "chunks": results
+            "total_slides": len(results),
+            "slides_summary": [
+                {
+                    "topic": r["topic"],
+                    "slide_numbers": [r["chunk_numbers"]],
+                    "summary": r["summary"]
+                }
+                for r in results
+            ]
         }
 
     except Exception as e:

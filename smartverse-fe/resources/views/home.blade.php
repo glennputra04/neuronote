@@ -328,7 +328,7 @@
 
         // Klik Upload Video
         btnUploadVideo.addEventListener('click', function() {
-            fileInput.accept = ".mp4,.avi"; // filter video
+            fileInput.accept = ".mp4,.avi,.mkv"; // filter video
             fileInput.click();
         });
 
@@ -380,12 +380,15 @@
             // Tampilkan loading
             loadingStatus.style.display = 'block';
 
+            // console.log(file)
+
             try {
-                const response = await fetch('http://localhost:8001/summarize', {
+                const response = await fetch('/summarize', {
                     method: 'POST',
                     body: formData
                 });
-
+                
+                console.log(response)
                 const result = await response.json();
 
                 if (response.ok) {
