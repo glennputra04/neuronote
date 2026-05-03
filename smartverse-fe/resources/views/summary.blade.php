@@ -173,7 +173,7 @@
                 </div>
 
                 <h3 class="fw-bold mb-1">Hasil Ringkasan Materi</h3>
-                <p class="text-muted mb-4">Total Slides: <span id="total-slides">0</span></p>
+                <p class="text-muted mb-4">Total Slides/Chunks: <span id="total-slides">0</span></p>
 
                 <div id="summary-list">
                 </div>
@@ -323,7 +323,7 @@
                     let contentHtml = `
                 <h5 class="fw-bold text-primary">
                     ${item.topic}
-                    <span class="badge bg-secondary" style="font-size: 10px">Slide: ${item.slide_numbers.join(', ')}</span>
+                    <span class="badge bg-secondary" style="font-size: 10px">Slide/Chunk: ${item.slide_numbers.join(', ')}</span>
                 </h5>
             `;
 
@@ -383,7 +383,7 @@
                 y += 10;
 
                 // Total slides
-                doc.text(`Total Slides: ${data.total_slides}`, 20, y);
+                doc.text(`Total Slides/Chunks: ${data.total_slides}`, 20, y);
 
                 y += 15;
 
