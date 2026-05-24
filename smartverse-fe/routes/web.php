@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SummarizerController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,9 @@ Route::delete('/summary/{id}', [SummarizerController::class, 'destroy'])->middle
 
 Route::post('/summarize', [SummarizerController::class, 'index'])->middleware('auth');
 Route::get('/history', [SummarizerController::class, 'history'])->middleware('auth')->name('history');
+
+Route::get('/quiz', [QuizController::class, 'quiz'])->middleware('auth');
+Route::get('/quiz-result', [QuizController::class, 'result'])->middleware('auth');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

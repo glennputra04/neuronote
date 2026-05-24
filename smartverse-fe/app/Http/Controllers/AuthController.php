@@ -33,7 +33,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/summary')->with('status', 'Registration successful.');
+        return redirect('/')->with('status', 'Registration successful.');
     }
 
     public function showLogin()
@@ -58,7 +58,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/summary');
+        return redirect()->intended('/')->with('status', 'Logged in successfully.');
     }
 
     public function logout(Request $request): RedirectResponse

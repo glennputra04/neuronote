@@ -63,9 +63,7 @@
 
             <div class="ms-auto d-flex align-items-center gap-3">
                 <a class="nav-link text-white" href="/">Home</a>
-                <a class="nav-link text-white" href="#">About Us</a>
                 @auth
-                    <a class="nav-link text-white" href="/summary">Summary</a>
                     <a class="nav-link text-white" href="/history">History</a>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
