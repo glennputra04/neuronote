@@ -166,10 +166,11 @@
                 <div class="file-inner d-flex justify-content-between align-items-center">
 
                     <div class="d-flex align-items-center">
-                        <img src="{{ asset('images/ppt.png') }}" width="40" class="me-3">
+                        <img id="file-icon"
+                            src="{{ asset('images/' . (pathinfo($summary->file_name ?? '', PATHINFO_EXTENSION) === 'mp4' ? 'mp4.png' : 'ppt.png')) }}"
+                            width="40" class="me-3">
                         <strong id="file-name">{{ $summary->file_name ?? 'Example.pptx' }}</strong>
                     </div>
-
                 </div>
             </div>
 
@@ -191,9 +192,7 @@
                     <div class="d-flex align-items-center gap-2">
 
                         <button id="generate-question-btn" class="generate-btn d-flex align-items-center gap-2">
-
                             <img src="{{ asset('images/question.png') }}" width="22">
-
                             Generate Questions
                         </button>
 
@@ -336,6 +335,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 @push('scripts')
     <script>
+        function getFileIcon(fileName) {
+            if (!fileName) {
+                return "{{ asset('images/ppt.png') }}";
+            }
+
+            const ext = fileName.split('.').pop().toLowerCase();
+
+            const icons = {
+                ppt: "{{ asset('images/ppt.png') }}",
+                pptx: "{{ asset('images/ppt.png') }}",
+                mp4: "{{ asset('images/mp4.png') }}",
+                avi: "{{ asset('images/mp4.png') }}",
+                mov: "{{ asset('images/mp4.png') }}",
+                default: "{{ asset('images/ppt.png') }}"
+            };
+
+            return icons[ext] || icons.default;
+        }
         const seededSummary = @json($seededSummary);
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -355,6 +372,7 @@
 
             if (data.file_name) {
                 document.getElementById('file-name').innerText = data.file_name;
+                document.getElementById('file-icon').src = getFileIcon(data.file_name);
             }
             document.getElementById('total-slides').innerText = data.total_slides;
 
@@ -388,6 +406,12 @@
             }
 
             renderSummary(true);
+
+            const generateBtn = document.getElementById('generate-question-btn');
+
+            generateBtn.addEventListener('click', function() {
+                window.location.href = '/quiz';
+            });
 
             document.getElementById('btn-bullet').addEventListener('click', function() {
                 currentMode = 'bullet';
