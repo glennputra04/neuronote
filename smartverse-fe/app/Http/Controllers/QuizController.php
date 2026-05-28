@@ -3,96 +3,92 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\QuizServices;
 
 class QuizController extends Controller
 {
-    public function quiz()
-    {
-        $questions = [
-            [
-                'title' => 'Question 1',
-                'text' => 'What is Lorem Ipsum?',
-                'name' => 'q1',
-                'options' => [
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                    'Option 4',
-                ],
-            ],
-            [
-                'title' => 'Question 2',
-                'text' => 'Who is Lorem Ipsum?',
-                'name' => 'q2',
-                'options' => [
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                    'Option 4',
-                ],
-            ],
-            [
-                'title' => 'Question 3',
-                'text' => 'Where is Lorem Ipsum?',
-                'name' => 'q3',
-                'options' => [
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                    'Option 4',
-                ],
-            ],
-            [
-                'title' => 'Question 4',
-                'text' => 'Why is Lorem Ipsum?',
-                'name' => 'q4',
-                'options' => [
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                    'Option 4',
-                ],
-            ],
-            [
-                'title' => 'Question 5',
-                'text' => 'When is Lorem Ipsum?',
-                'name' => 'q5',
-                'options' => [
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                    'Option 4',
-                ],
-            ],
-        ];
+    protected QuizServices $quizService;
 
+    public function __construct(QuizServices $quizService)
+    {
+        $this->quizService = $quizService;
+    }
+
+    public function generate(Request $request)
+    {
+        $request->validate([
+            'summary_file' => 'required|file|mimes:pdf'
+        ]);
+
+        $file = $request->file('summary_file');
+
+        $quiz = $this->quizService->generateQuiz($file);
+
+        $questions = $this->quizService->normalizeQuestions($quiz);
+        
+        session(['quiz_questions' => $questions]);
+        
         return view('quiz', compact('questions'));
     }
 
-    public function result()
+   public function result(Request $request)
     {
-        $correctCount = 3;
-        $incorrectCount = 2;
-        $total = 5;
-        $percent = 60;
-        $isLowScore = $percent <= 60;
+        $questions = session('quiz_questions', []);
 
-        $corrections = [
-            [
-                'title' => 'Question 1',
-                'text' => 'What is Lorem Ipsum?',
-                'options' => ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-                'user_answer' => 0,
-                'correct_answer' => 3,
-            ],
-            [
-                'title' => 'Question 3',
-                'text' => 'Where is Lorem Ipsum?',
-                'options' => ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-                'user_answer' => 0,
-                'correct_answer' => 1,
-            ],
-        ];
+        $correctCount = 0;
+        $incorrectCount = 0;
+
+        $corrections = [];
+
+        foreach ($questions as $question) {
+
+            $userAnswerIndex = $request->input($question['name']);
+
+            // kalau user belum jawab
+            if ($userAnswerIndex === null) {
+
+                $incorrectCount++;
+
+                $corrections[] = [
+                    'title' => $question['title'],
+                    'text' => $question['text'],
+                    'options' => $question['options'],
+                    'user_answer' => null,
+                    'correct_answer' => $question['answer'],
+                ];
+
+                continue;
+            }
+
+            $userAnswer = $question['options'][$userAnswerIndex] ?? '';
+
+            $correctAnswer = $question['answer'];
+
+            if ($userAnswer == $correctAnswer) {
+
+                $correctCount++;
+
+            } else {
+
+                $incorrectCount++;
+
+                $corrections[] = [
+                    'title' => $question['title'],
+                    'text' => $question['text'],
+                    'options' => $question['options'],
+                    'user_answer' => $userAnswer,
+                    'correct_answer' => $correctAnswer,
+                ];
+            }
+        }
+
+        $total = count($questions);
+
+        $percent = $total > 0
+            ? round(($correctCount / $total) * 100)
+            : 0;
+
+        $isLowScore = $percent <= 60;
 
         return view('quiz-result', compact(
             'correctCount',
@@ -102,5 +98,7 @@ class QuizController extends Controller
             'isLowScore',
             'corrections'
         ));
+
     }
+
 }

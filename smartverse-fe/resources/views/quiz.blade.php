@@ -130,7 +130,7 @@
             <h1 class="quiz-title">Quiz Time!</h1>
             <p class="quiz-subtitle">Test your understanding with generated questions from your summary</p>
 
-            <form action="{{ url('/quiz-result') }}" method="GET">
+            <form action="{{ url('/quiz-result') }}" method="POST">
                 @csrf
 
                 @foreach ($questions as $question)

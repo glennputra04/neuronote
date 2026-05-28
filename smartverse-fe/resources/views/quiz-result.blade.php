@@ -265,23 +265,26 @@
                         <div class="row g-2">
                             @foreach ($correction['options'] as $optIndex => $option)
                                 @php
-                                    $isCorrect = $optIndex == $correction['correct_answer'];
+                                    $isCorrect = $option === $correction['correct_answer'];
 
-                                    $isUser =
-                                        $correction['user_answer'] !== null &&
-                                        (string) $optIndex === (string) $correction['user_answer'];
+                                    $isUser = $option === $correction['user_answer'];
                                 @endphp
 
                                 <div class="col-md-6">
                                     <div class="option-box">
+
+                                       
 
                                         @if ($isCorrect)
                                             <div class="correct-icon">
                                                 ★
                                             </div>
                                         @else
-                                            <input class="form-check-input option-radio" type="radio" disabled
+                                            <input class="form-check-input option-radio"
+                                                type="radio"
+                                                disabled
                                                 {{ $isUser ? 'checked' : '' }}>
+
                                         @endif
 
                                         <label class="option-label">

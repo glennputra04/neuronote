@@ -16,7 +16,8 @@ Route::post('/summarize', [SummarizerController::class, 'index'])->middleware('a
 Route::get('/history', [SummarizerController::class, 'history'])->middleware('auth')->name('history');
 
 Route::get('/quiz', [QuizController::class, 'quiz'])->middleware('auth');
-Route::get('/quiz-result', [QuizController::class, 'result'])->middleware('auth');
+Route::post('/generate-quiz', [QuizController::class, 'generate'])->middleware('auth');
+Route::post('/quiz-result', [QuizController::class, 'result'])->middleware('auth');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
