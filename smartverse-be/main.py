@@ -167,10 +167,23 @@ def filter_irrelevant_slides(slides):
 
         text = slide["content"]
 
-        if i == 0 : continue
+        # slide banyak
+        if total > 3 and i == 0:
+            continue
 
-        # cek 3 halaman terakhir
-        if i >= total - 3:
+        # slide sedikit
+        if total <= 3 and i == 0:
+
+            words = text.split()
+
+            if len(words) > 2:
+                text = " ".join(words[2:])
+
+            slide["content"] = text
+
+        # buang closing/reference jika banyak slide
+        if total > 3 and i >= total - 3:
+
             if is_reference_slide(text) or is_closing_slide(text):
                 continue
 
@@ -542,17 +555,41 @@ def generate_distractors(answer, all_keywords):
     return distractors[:3]
 
 def extract_candidate_sentences(text):
-    sentences = re.split(r'(?<=[.!?]) +', text)
 
-    candidates = []
+    # 1. sentence splitting
+
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+
+    valid_sentences = []
 
     for s in sentences:
+
         words = s.split()
 
-        if 8 <= len(words) <= 25:
-            candidates.append(s)
+        if 8 <= len(words) <= 30:
+            valid_sentences.append(s.strip())
 
-    return candidates
+
+    # 2. fallback to chunking
+
+    if len(valid_sentences) < 3:
+
+        words = text.split()
+
+        chunk_size = 20
+
+        for i in range(0, len(words), chunk_size):
+
+            chunk = words[i:i + chunk_size]
+
+            if 8 <= len(chunk) <= 30:
+                valid_sentences.append(
+                    " ".join(chunk)
+                )
+
+    return valid_sentences
+
+
 
 
 import random
@@ -622,6 +659,8 @@ async def generate_quiz(
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    print("1. File Received")
+
     # convert ppt -> pdf
     if file.filename.lower().endswith(".pdf"):
         pdf_path = file_location
@@ -634,6 +673,8 @@ async def generate_quiz(
 
         files_to_cleanup = [file_location, pdf_path]
 
+    print("2. File Converted/Saved")
+
     # extract slides
     slides = extract_all_text(pdf_path)
 
@@ -641,6 +682,8 @@ async def generate_quiz(
 
     slides = group_short_slides(slides)
 
+    print("3. Text Extracted")
+    print(slides)
     # gabungkan semua isi slide
     combined_text = ""
 
@@ -652,11 +695,19 @@ async def generate_quiz(
             slide["content"]
         )
 
+    print("\n\n")
+    print("4. Text Combined")
+    print(combined_text)
+
     # generate maksimal 10 soal total
     questions = generate_mcq(
         combined_text,
         max_questions=5
     )
+
+    print("\n\n")
+    print("5. Questions Generated")
+    print(questions)
 
     background_tasks.add_task(
         remove_temp_files,
