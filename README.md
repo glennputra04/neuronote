@@ -17,6 +17,7 @@ FastAPI-based backend service with laravel frontend that extracts text from Powe
 - Upload PPTX / PPT / PDF file
 - Extract text automatically
 - Generate summary using Transformer model
+- Generate quiz based on the summary generated
 
 ---
 
